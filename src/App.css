@@ -1,0 +1,23 @@
+body{
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(#171d3f , #1b2b4a);
+  font-family: "Barlow Semi Condensed", sans-serif;
+  font-weight: 600;
+  font-style: normal;;
+}
+
+.containerr {
+  background-image: url(./assets/images/bg-triangle.svg);
+  background-repeat: no-repeat;
+  background-position: center; 
+ 
+}
+
+@media (min-width: 1700px) {
+  .containerr {
+    background-size: 40%;
+    background-position: 265px 90px; 
+  }
+  
+}
