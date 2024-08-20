@@ -13,12 +13,12 @@ export default function Youlose(props) {
         <h1 className="text-white text-[1.55rem] ml-10 max-[1100px]:ml-0 max-[900px]:hidden">YOU PICKED </h1>
         <h1 className="text-white text-[1.55rem] mr-10 max-[1100px]:mr-0 max-[900px]:hidden">THE HOUSE PICKED</h1>
       </div>
-      <div className="left w-1/2 h-full flex justify-center items-center max-[800px]:flex-col max-[800px]:gap-3 ">
+      <div className="left w-[30rem] h-full flex justify-center items-center max-[800px]:flex-col max-[800px]:gap-3 ">
         {props.choice === "paper" && <Paper papel={paperImg} />}
         {props.choice === "rock" && <Rock piedra={rockImg} />}
         {props.choice === "scissors" && <Scissors tijera={scissorImg} />}
 
-        <div className="w-[200px] h-[100px] flex justify-center items-center flex-col gap-3">
+        <div className="w-[200px] h-[100px] m-[2rem] flex justify-center items-center flex-col gap-3">
           <h1 className="text-white text-[2.25rem] max-[1000px]:text-[1.8rem]">YOU LOST</h1>
           <button
             onClick={() => {

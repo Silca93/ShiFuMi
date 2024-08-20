@@ -12,8 +12,8 @@ console.log(triangle);
 
 export default function Accueil(props) {
   return (
-    <div className={`containerr w-1/2 h-3/5 flex flex-col justify-center items-center`}>
-        <div className="top w-full h-1/2 flex">
+    <div className={`containerr w-full h-3/5  flex flex-col justify-center items-center`}>
+        <div className="top w-full h-1/2 flex ">
             <Paper setHasPlayed={props.setHasPlayed} count={props.count} setCount={props.setCount} setChoice={props.setChoice} papel={papelIcon} />
             <Scissors setHasPlayed={props.setHasPlayed} count={props.count} setCount={props.setCount} setChoice={props.setChoice} tijera={scissorIcon}/>
         </div>

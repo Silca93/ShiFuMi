@@ -66,6 +66,8 @@ function App() {
     // count == "youlose"
    }
 
+ let array = [1,2,3]
+
 
 
    useEffect(() => {
