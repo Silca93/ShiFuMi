@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Header from './Components/Header';
 import Accueil from './Components/Accueil/Accueil';
 import './App.css';
@@ -8,105 +8,122 @@ import Youlose from './Components/Youlose/Youlose';
 import Draw from './Components/Draw/Draw';
 import Rules from './Components/Rules/Rules';
 
-
 function App() {
-  const [count, setCount] = useState("Accueil")
-  const [choice, setChoice] = useState("")
-  const [hasPlayed, setHasPlayed] = useState(false)
-  const [increment, setIncrement] = useState(0)
-  const [decrement, setDecrement] = useState(increment)
+  const [count, setCount] = useState("Accueil");
+  const [choice, setChoice] = useState("");
+  const [hasPlayed, setHasPlayed] = useState(false);
+  const [score, setScore] = useState(0);
+  const [display, setDisplay] = useState(false);
+  const [housePick, setHousePick] = useState(null);
 
-  let choices = ["rock", "paper", "scissors"]
-  let housePick = choices[Math.floor(Math.random()*3)]
-  console.log("the house pick = " + housePick);
+  const choices = ["rock", "paper", "scissors"];
 
-  // let score = 0;
-
- 
-  let scorePlus = () => {
+  // Function to handle player's choice
+  const handleChoice = (playerChoice) => {
+    const computerChoice = choices[Math.floor(Math.random() * 3)];
+    setChoice(playerChoice);
+    setHousePick(computerChoice);
+    setHasPlayed(true);
     
-    setIncrement((prevValue) => prevValue + 1);
-  };
-  
-  let scoreMinus = () => {
-    setDecrement((prevValue) => prevValue - 1);
-  };
-
-  let result = () => {
-    (increment - decrement);
-  }
-
-  let draw;
-  let didIwin;
-
-  let reset = () => {
-    setIncrement((prevValue) => prevValue = 0)
-  }
-
-  if (choice === housePick) {
-    console.log("Draw");
-    draw = true;
-    
-  }else if ((choice === "rock" && housePick === "scissors") || (choice === "paper" && housePick === "rock") || 
-  (choice === "scissors" && housePick === "paper")) {  
-        console.log("You win")
-        didIwin = true;
-        draw = false;
-        console.log(didIwin);
-        // scorePlus();
-        // console.log(score);
-        
-        
-         
-   }else {
-    console.log("You lost");
-    didIwin = false;
-    draw = false;
-    console.log(didIwin);
-    // count == "youlose"
-   }
-
- let array = [1,2,3]
-
-
-
-   useEffect(() => {
-    if (didIwin) {
-      scorePlus();
+    // Determine outcome and update score
+    if (playerChoice === computerChoice) {
+      // Draw - do nothing
+      return;
     }
-  }, [increment]);
+    
+    const isWin = (
+      (playerChoice === "rock" && computerChoice === "scissors") || 
+      (playerChoice === "paper" && computerChoice === "rock") || 
+      (playerChoice === "scissors" && computerChoice === "paper")
+    );
+    
+    if (isWin) {
+      setScore(prev => prev + 1);
+    } else {
+      setScore(prev => Math.max(0, prev - 1));
+    }
+  };
 
+  const reset = () => {
+    setScore(0);
+  };
 
-  const [display, setDisplay] = useState(false)
+  const playAgain = () => {
+    setChoice("");
+    setHasPlayed(false);
+    setHousePick(null);
+  };
 
-  let showRules = () => {
-    setDisplay(!display)
-    console.log(display);
-  }
+  // Determine current game state
+  const isDraw = choice === housePick;
+  const didIwin = !isDraw && (
+    (choice === "rock" && housePick === "scissors") || 
+    (choice === "paper" && housePick === "rock") || 
+    (choice === "scissors" && housePick === "paper")
+  );
+
+  const showRules = () => {
+    setDisplay(!display);
+  };
 
   return (
     <>
-      {display?
-       <Rules display={display} showRules={showRules} />
-       :
-       <div className="w-screen h-screen flex flex-col items-center gap-[80px]">
-   
-         
-         <Header score={increment} result={result} hasPlayed={hasPlayed} setHasPlayed={setHasPlayed} scoremoins={decrement} reset={reset}/>
-         {!hasPlayed && <Accueil setHasPlayed={setHasPlayed} setCount={setCount} setChoice={setChoice}/>}
-         
-         {hasPlayed && didIwin && !draw && <Youwin  housePick={housePick}  scorePlus={scorePlus} setHasPlayed={setHasPlayed} setChoice={setChoice} count={count} choice={choice} setCount={setCount}  />}
-         {hasPlayed && !didIwin && !draw && <Youlose reset={reset} housePick={housePick} scoreMinus={scoreMinus} setHasPlayed={setHasPlayed} setChoice={setChoice} count={count} choice={choice} setCount={setCount}  />}
-         {hasPlayed && draw && <Draw housePick={housePick} setHasPlayed={setHasPlayed} setChoice={setChoice} count={count} choice={choice} setCount={setCount}  />}
-                     
-         <Footer display={display} showRules={showRules} />
-         
-   
-        
-       </div>
-        }
+      {display ? (
+        <Rules display={display} showRules={showRules} />
+      ) : (
+        <div className="w-screen h-screen flex flex-col items-center gap-[80px]">
+          <Header score={score} reset={reset} />
+          
+          {!hasPlayed && (
+            <Accueil 
+              setHasPlayed={(value) => {
+                if (!value) playAgain();
+                setHasPlayed(value);
+              }}
+              setCount={setCount} 
+              setChoice={handleChoice}
+            />
+          )}
+          
+          {hasPlayed && didIwin && !isDraw && (
+            <Youwin  
+              housePick={housePick}
+              setHasPlayed={() => playAgain()}
+              setChoice={setChoice} 
+              count={count} 
+              choice={choice} 
+              setCount={setCount}  
+            />
+          )}
+          
+          {hasPlayed && !didIwin && !isDraw && (
+            <Youlose 
+              reset={reset} 
+              housePick={housePick}
+              setHasPlayed={() => playAgain()}
+              setChoice={setChoice} 
+              count={count} 
+              choice={choice} 
+              setCount={setCount}  
+            />
+          )}
+          
+          {hasPlayed && isDraw && (
+            <Draw 
+              housePick={housePick}
+              setHasPlayed={() => playAgain()}
+              setChoice={setChoice} 
+              count={count} 
+              choice={choice} 
+              setCount={setCount}  
+            />
+          )}
+          
+          <Footer display={display} showRules={showRules} />
+        </div>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
